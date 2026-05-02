@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="TesteCamposDealer" Class="DBTesteCamposDealerDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="WebSettings" ConnectionString="Data Source=DESKTOP-NMKVIBK\SQLEXPRESS;Initial Catalog=TesteCamposDealer;Integrated Security=True" SettingsObjectName="System.Configuration.ConfigurationManager.ConnectionStrings" SettingsPropertyName="TesteCamposDealerConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Cliente" Member="Cliente">
+    <Type Name="Cliente">
+      <Column Name="idCliente" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="nomeCliente" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="endereco" Type="System.String" DbType="VarChar(20) NOT NULL" CanBeNull="false" />
+      <Column Name="dthRegistro" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Cliente_Venda" Member="Venda" AccessModifier="Internal" ThisKey="idCliente" OtherKey="idCliente" Type="Venda" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Produto" Member="Produto">
+    <Type Name="Produto">
+      <Column Name="idProduto" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="dscProduto" Type="System.String" DbType="NVarChar(100) NOT NULL" CanBeNull="false" />
+      <Association Name="Produto_Venda" Member="Venda" AccessModifier="Internal" ThisKey="idProduto" OtherKey="idProduto" Type="Venda" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Venda" Member="Venda">
+    <Type Name="Venda">
+      <Column Name="idVenda" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="idCliente" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="idProduto" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="vlrProduto" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="dthRegistro" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Association Name="Cliente_Venda" Member="Cliente" ThisKey="idCliente" OtherKey="idCliente" Type="Cliente" IsForeignKey="true" />
+      <Association Name="Produto_Venda" Member="Produto" ThisKey="idProduto" OtherKey="idProduto" Type="Produto" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
