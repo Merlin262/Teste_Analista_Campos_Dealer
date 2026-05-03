@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Dependencies;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -28,12 +29,11 @@ namespace TesteCamposDealer
             var appAssembly = typeof(GetAllClientesHandler).Assembly;
             var mediator = BuildMediator(appAssembly);
 
+            GlobalConfiguration.Configuration.DependencyResolver = new MediatorDependencyResolver(mediator);
+
             DependencyResolver.SetResolver(
                 serviceType =>
                 {
-                    if (serviceType == typeof(ClienteController)) return new ClienteController(mediator);
-                    if (serviceType == typeof(ProdutoController)) return new ProdutoController(mediator);
-                    if (serviceType == typeof(VendaController)) return new VendaController(mediator);
                     if (serviceType == typeof(HomeController)) return new HomeController();
                     return null;
                 },
@@ -83,5 +83,25 @@ namespace TesteCamposDealer
                 return Activator.CreateInstance(handlerType, new UnitOfWork(new AppDbContext()));
             });
         }
+    }
+
+    internal class MediatorDependencyResolver : System.Web.Http.Dependencies.IDependencyResolver
+    {
+        private readonly IMediator _mediator;
+        public MediatorDependencyResolver(IMediator mediator) { _mediator = mediator; }
+
+        public System.Web.Http.Dependencies.IDependencyScope BeginScope() => this;
+
+        public object GetService(Type serviceType)
+        {
+            if (serviceType == typeof(ClienteController)) return new ClienteController(_mediator);
+            if (serviceType == typeof(ProdutoController)) return new ProdutoController(_mediator);
+            if (serviceType == typeof(VendaController)) return new VendaController(_mediator);
+            return null;
+        }
+
+        public IEnumerable<object> GetServices(Type serviceType) => Enumerable.Empty<object>();
+
+        public void Dispose() { }
     }
 }
