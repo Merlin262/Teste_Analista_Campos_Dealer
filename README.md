@@ -40,7 +40,36 @@ No Visual Studio: clique com o botão direito na solução → **Restore NuGet P
 
 ### 3. Banco de dados
 
-O banco é criado e migrado automaticamente na primeira execução via `MigrateDatabaseToLatestVersion`. A connection string aponta para `(localdb)\MSSQLLocalDB` — nenhuma configuração adicional é necessária para ambiente local.
+O projeto usa um banco legado com dados pré-existentes para simular o cenário real de atualização de schema sem perda de registros. São dois passos obrigatórios:
+
+**3.1 Restaurar o backup**
+
+Abra o SQL Server Management Studio (SSMS) e restaure o arquivo `DB/TesteCamposDealer.bak` para a instância `(localdb)\MSSQLLocalDB`.
+
+Via SSMS: botão direito em **Databases → Restore Database** → selecione o arquivo `.bak`.
+
+Ou via T-SQL:
+
+```sql
+RESTORE DATABASE TesteCamposDealer
+    FROM DISK = 'caminho_completo\DB\TesteCamposDealer.bak'
+    WITH REPLACE;
+```
+
+**3.2 Aplicar as migrations**
+
+Com o banco restaurado, execute as migrations EF6 para evoluir o schema sem perda de dados. No **Package Manager Console** (View → Other Windows → Package Manager Console), com `TesteCamposDealer.Infrastructure` selecionado como _Default project_:
+
+```powershell
+Update-Database
+```
+
+As três migrations em `Infrastructure/Data/Migrations/` são aplicadas em ordem:
+1. `FirstMigration` — converte PKs de `INT` para `UNIQUEIDENTIFIER`, cria `VendaItem` e `ProdutoPrecoHistorico`, migra os dados existentes
+2. `RemoveLegacyId` — remove colunas legadas após a migração de dados
+3. `FixVlrTotalToDec` — corrige o tipo de `vlrTotal` para `DECIMAL(18,2)`
+
+> Essa abordagem foi escolhida deliberadamente para simular um banco legado com dados reais que precisava ser atualizado sem perda de registros.
 
 Para usar SQL Server Express ou remoto, altere a connection string em `API/Web.config`:
 
@@ -128,24 +157,24 @@ TesteAnalistaCamposDealer/
 │
 ├── Application/                ← TesteCamposDealer.Application (Class Library)
 │   ├── Behaviors/              ← ValidationBehavior (pipeline MediatR)
-│   ├── Common/Validation/      ← PagedResult, IValidator, ValidationException
+│   ├── Common/                 ← PagedResult
 │   ├── Dto/                    ← VendaItemRequest
-│   ├── Exceptions/             ← NotFoundException
+│   ├── Exceptions/             ← NotFoundException, ValidationException
 │   ├── Handlers/               ← Cliente/, Produto/, Venda/ (Commands + Queries)
 │   └── Validators/             ← CreateCliente, UpdateCliente, ...
 │
 ├── Infrastructure/             ← TesteCamposDealer.Infrastructure (Class Library)
 │   ├── Data/                   ← AppDbContext
-│   │   └── Migrations/         ← EF6 Code First migrations
+│   │   └── Migrations/         ← EF6 Code First migrations (FirstMigration, RemoveLegacyId, FixVlrTotalToDec)
 │   └── Repositories/           ← ClienteRepository, ProdutoRepository, VendaRepository, UnitOfWork
 │
 ├── API/                        ← TesteCamposDealer.API (ASP.NET MVC 5)
-│   ├── App_Start/              ← DependencyConfig, FilterConfig, RouteConfig
+│   ├── App_Start/              ← BundleConfig, FilterConfig, RouteConfig, WebApiConfig
 │   ├── Controllers/            ← ClienteController, ProdutoController, VendaController
 │   ├── Mappers/                ← ViewModelMappers
 │   └── ViewModels/             ← ClienteViewModel, ProdutoViewModel, VendaViewModel, ...
 │
-├── TesteAnalistaCamposDealer.Web/  ← Interface web (ASP.NET MVC 5)
+├── TesteCamposDealer.Web/      ← Interface web (ASP.NET MVC 5)
 │   ├── Controllers/
 │   ├── ViewModels/
 │   └── Views/                  ← Cliente/, Produto/, Venda/, Shared/
@@ -155,9 +184,13 @@ TesteAnalistaCamposDealer/
 │   ├── Helpers/                ← MockDbSetHelper (infraestrutura async EF6)
 │   └── Repositories/
 │
+├── DB/                         ← Backup do banco legado
+│   └── TesteCamposDealer.bak   ← Restaurar antes de aplicar as migrations
+│
 └── docs/
     ├── historias-de-usuario.md
     ├── documentacao-tecnica.md
+    ├── CamposDealer.postman_collection.json
     └── CamposDealerDiagram.png
 ```
 

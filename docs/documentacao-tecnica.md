@@ -83,13 +83,13 @@ No projeto **Web**, os controllers recebem a resposta HTTP da API e exibem o err
 ```
 Cliente
   ├── idCliente      UNIQUEIDENTIFIER (PK)
-  ├── nomeCliente    VARCHAR(200)
-  ├── endereco       VARCHAR(500)
+  ├── nomeCliente    NVARCHAR(200)
+  ├── endereco       NVARCHAR(30)
   └── dthRegistro    DATETIME
 
 Produto
   ├── idProduto      UNIQUEIDENTIFIER (PK)
-  ├── dscProduto     NVARCHAR(200)
+  ├── dscProduto     NVARCHAR(100)
   ├── vlrProduto     DECIMAL(18,2)
   └── ProdutoPrecoHistorico (1:N)
 
@@ -182,6 +182,9 @@ Todas as respostas são JSON. Rotas definidas via attribute routing (`[RoutePref
 
 ## 6.2. Collection Postman
 
+O arquivo `docs/CamposDealer.postman_collection.json` contém todas as requisições organizadas por recurso (Clientes, Produtos, Vendas). Importe-o no Postman via **File → Import** para testar os endpoints sem configuração manual.
+
+---
 
 ## 7. Tratamento de Erros
 
@@ -217,6 +220,10 @@ Como EF6 não possui provedor in-memory, os repositórios são testados via `Moc
 
 ### LINQ to SQL → Entity Framework 6
 O banco legado era acessado via LINQ to SQL (`.dbml` com classes auto-geradas). Essa abordagem tem três limitações críticas para o escopo do projeto: não suporta migrations (o schema precisaria ser mantido manualmente), não suporta `async/await` nativo (todos os acessos são síncronos e bloqueantes), e o mapeamento de relacionamentos 1:N aninhados (`Venda → VendaItem → Produto`) é verbose e frágil. A migração para EF6 Code First resolveu os três pontos e ainda habilitou o padrão Repository + Unit of Work testável com Moq.
+
+### Banco legado + migrations como estratégia de setup
+
+O arquivo `DB/TesteCamposDealer.bak` contém um dump do banco original (schema legado com `INT` como PK e a tabela `Venda` com `idProduto` embutido). Ao invés de entregar um banco já migrado, o setup exige duas etapas: restaurar o `.bak` e então executar `Update-Database`. Essa escolha foi intencional para demonstrar o fluxo real de migração incremental: as três migrations evoluem o schema sem apagar os dados existentes, convertendo PKs para `UNIQUEIDENTIFIER`, separando os itens em `VendaItem` e corrigindo tipos numéricos.
 
 ### Lazy Loading desabilitado
 O `AppDbContext` desabilita proxy e lazy loading. Todas as queries que precisam de navegação usam `Include()` explícito. Isso evita o problema N+1 e torna o comportamento previsível em contextos assíncronos.
