@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TesteCamposDealer.Applicati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TesteCamposDealer.Web", "..\TesteCamposDealer.Web\TesteCamposDealer.Web.csproj", "{DE202BA7-6FDC-4044-8CBD-8839F1142FB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TesteCamposDealer.Tests", "..\TesteCamposDealer.Tests\TesteCamposDealer.Tests.csproj", "{98718663-B0C8-49B0-A9D8-EAB14AF284DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{DE202BA7-6FDC-4044-8CBD-8839F1142FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE202BA7-6FDC-4044-8CBD-8839F1142FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE202BA7-6FDC-4044-8CBD-8839F1142FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98718663-B0C8-49B0-A9D8-EAB14AF284DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98718663-B0C8-49B0-A9D8-EAB14AF284DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98718663-B0C8-49B0-A9D8-EAB14AF284DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98718663-B0C8-49B0-A9D8-EAB14AF284DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

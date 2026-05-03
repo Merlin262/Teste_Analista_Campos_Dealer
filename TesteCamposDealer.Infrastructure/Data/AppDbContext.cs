@@ -57,9 +57,9 @@ namespace TesteCamposDealer.Infrastructure.Data
             }
         }
 
-        public DbSet<Cliente> Cliente { get; set; }
-        public DbSet<Produto> Produto { get; set; }
-        public DbSet<Venda> Venda { get; set; }
+        public virtual DbSet<Cliente> Cliente { get; set; }
+        public virtual DbSet<Produto> Produto { get; set; }
+        public virtual DbSet<Venda> Venda { get; set; }
         public virtual DbSet<VendaItem> VendaItens { get; set; }
         public virtual DbSet<ProdutoPrecoHistorico> ProdutoPrecoHistoricos { get; set; }
 
