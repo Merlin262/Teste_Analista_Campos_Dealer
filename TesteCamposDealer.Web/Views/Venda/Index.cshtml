@@ -1,0 +1,85 @@
+@model TesteCamposDealer.Web.ViewModels.PagedResultViewModel<TesteCamposDealer.Web.ViewModels.VendaViewModel>
+@using TesteCamposDealer.Web.ViewModels
+@{
+    ViewBag.Title = "Vendas";
+    var ranking = ViewBag.Ranking as IEnumerable<VendaViewModel> ?? Enumerable.Empty<VendaViewModel>();
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Vendas</h2>
+            <a href="@Url.Action("Create")" class="btn btn-primary">Nova Venda</a>
+        </div>
+
+        <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Cliente</th>
+                    <th>Valor Total</th>
+                    <th>Data</th>
+                    <th class="text-center"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model.Data)
+                {
+                    <tr>
+                        <td>@v.nomeCliente</td>
+                        <td>@v.vlrTotal.ToString("C")</td>
+                        <td>@v.dthRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center">
+                            <a href="@Url.Action("Details", new { id = v.idVenda })" class="btn btn-sm btn-info">Detalhes</a>
+                            <a href="@Url.Action("Edit", new { id = v.idVenda })" class="btn btn-sm btn-secondary">Editar</a>
+                            @using (Html.BeginForm("Delete", "Venda", new { id = v.idVenda }, FormMethod.Post, new { style = "display:inline" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-sm btn-danger"
+                                        onclick="return confirm('Excluir esta venda?')">
+                                    Excluir
+                                </button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        @if (Model.TotalPages > 1)
+        {
+            <nav>
+                <ul class="pagination">
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Ranking de Vendas</h6>
+                <a href="@Url.Action("Ranking")" class="text-white-50 small">ver completo</a>
+            </div>
+            <ul class="list-group list-group-flush">
+                @{ int pos = 1; }
+                @foreach (var v in ranking.Take(5))
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-3 py-2">
+                        <span>
+                            <span class="badge badge-dark mr-1">@pos</span>
+                            @v.nomeCliente
+                        </span>
+                        <strong>@v.vlrTotal.ToString("C")</strong>
+                    </li>
+                    pos++;
+                }
+            </ul>
+        </div>
+    </div>
+</div>

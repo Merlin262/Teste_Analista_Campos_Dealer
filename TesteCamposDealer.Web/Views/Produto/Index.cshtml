@@ -1,0 +1,58 @@
+﻿@model TesteCamposDealer.Web.ViewModels.PagedResultViewModel<TesteCamposDealer.Web.ViewModels.ProdutoViewModel>
+@{
+    ViewBag.Title = "Produtos";
+}
+
+@if (TempData["Erro"] != null)
+{
+    <div class="alert alert-danger">@TempData["Erro"]</div>
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Produtos</h2>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Novo Produto</a>
+</div>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th class="text-center"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Data)
+        {
+            <tr>
+                <td>@p.dscProduto</td>
+                <td>@p.vlrProduto.ToString("C")</td>
+                <td class="text-center">
+                    <a href="@Url.Action("Edit", new { id = p.idProduto })" class="btn btn-sm btn-secondary">Editar</a>
+                    @using (Html.BeginForm("Delete", "Produto", new { id = p.idProduto }, FormMethod.Post, new { style = "display:inline" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Excluir produto @p.dscProduto?')">
+                            Excluir
+                        </button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.Page ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

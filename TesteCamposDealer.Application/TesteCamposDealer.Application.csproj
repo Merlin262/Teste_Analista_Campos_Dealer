@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{AC8FEFB2-ADEF-43E0-A16E-77C3A84F3950}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TesteCamposDealer.Application</RootNamespace>
+    <AssemblyName>TesteCamposDealer.Application</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FluentValidation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\API\packages\FluentValidation.11.12.0\lib\netstandard2.0\FluentValidation.dll</HintPath>
+    </Reference>
+    <Reference Include="MediatR, Version=9.0.0.0, Culture=neutral, PublicKeyToken=bb9a41a5e8aaa7e2, processorArchitecture=MSIL">
+      <HintPath>..\API\packages\MediatR.9.0.0\lib\net461\MediatR.dll</HintPath>
+    </Reference>
+    <Reference Include="Medo.Uuid7, Version=3.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\API\packages\Medo.Uuid7.3.2.0\lib\netstandard2.0\Medo.Uuid7.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\API\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\API\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Behaviors\ValidationBehavior.cs" />
+    <Compile Include="Common\PagedResult.cs" />
+    <Compile Include="Dto\VendaItemRequest.cs" />
+    <Compile Include="Exceptions\NotFoundException.cs" />
+    <Compile Include="Handlers\Clientes\Commands\CreateCliente\CreateClienteCommand.cs" />
+    <Compile Include="Handlers\Clientes\Commands\CreateCliente\CreateClienteHandler.cs" />
+    <Compile Include="Handlers\Clientes\Commands\DeleteCliente\DeleteClienteCommand.cs" />
+    <Compile Include="Handlers\Clientes\Commands\DeleteCliente\DeleteClienteHandler.cs" />
+    <Compile Include="Handlers\Clientes\Commands\UpdateCliente\UpdateClienteCommand.cs" />
+    <Compile Include="Handlers\Clientes\Commands\UpdateCliente\UpdateClienteHandler.cs" />
+    <Compile Include="Handlers\Clientes\Queries\GetAllClientes\GetAllClientesHandler.cs" />
+    <Compile Include="Handlers\Clientes\Queries\GetAllClientes\GetAllClientesQuery.cs" />
+    <Compile Include="Handlers\Clientes\Queries\GetClienteById\GetClienteByIdHandler.cs" />
+    <Compile Include="Handlers\Clientes\Queries\GetClienteById\GetClienteByIdQuery.cs" />
+    <Compile Include="Handlers\Produtos\Commands\CreateProduto\CreateProdutoCommand.cs" />
+    <Compile Include="Handlers\Produtos\Commands\CreateProduto\CreateProdutoHandler.cs" />
+    <Compile Include="Handlers\Produtos\Commands\DeleteProduto\DeleteProdutoCommand.cs" />
+    <Compile Include="Handlers\Produtos\Commands\DeleteProduto\DeleteProdutoHandler.cs" />
+    <Compile Include="Handlers\Produtos\Commands\UpdateProduto\UpdateProdutoCommand.cs" />
+    <Compile Include="Handlers\Produtos\Commands\UpdateProduto\UpdateProdutoHandler.cs" />
+    <Compile Include="Handlers\Produtos\Queries\GetAllProdutos\GetAllProdutosHandler.cs" />
+    <Compile Include="Handlers\Produtos\Queries\GetAllProdutos\GetAllProdutosQuery.cs" />
+    <Compile Include="Handlers\Produtos\Queries\GetProdutoById\GetProdutoByIdHandler.cs" />
+    <Compile Include="Handlers\Produtos\Queries\GetProdutoById\GetProdutoByIdQuery.cs" />
+    <Compile Include="Handlers\Vendas\Commands\CreateVenda\CreateVendaCommand.cs" />
+    <Compile Include="Handlers\Vendas\Commands\CreateVenda\CreateVendaHandler.cs" />
+    <Compile Include="Handlers\Vendas\Commands\DeleteVenda\DeleteVendaCommand.cs" />
+    <Compile Include="Handlers\Vendas\Commands\DeleteVenda\DeleteVendaHandler.cs" />
+    <Compile Include="Handlers\Vendas\Commands\UpdateVenda\UpdateVendaCommand.cs" />
+    <Compile Include="Handlers\Vendas\Commands\UpdateVenda\UpdateVendaHandler.cs" />
+    <Compile Include="Handlers\Vendas\Queries\GetAllVendas\GetAllVendasHandler.cs" />
+    <Compile Include="Handlers\Vendas\Queries\GetAllVendas\GetAllVendasQuery.cs" />
+    <Compile Include="Handlers\Vendas\Queries\GetRanking\GetRankingHandler.cs" />
+    <Compile Include="Handlers\Vendas\Queries\GetRanking\GetRankingQuery.cs" />
+    <Compile Include="Handlers\Vendas\Queries\GetVendaById\GetVendaByIdHandler.cs" />
+    <Compile Include="Handlers\Vendas\Queries\GetVendaById\GetVendaByIdQuery.cs" />
+    <Compile Include="Handlers\Vendas\Queries\GetVendasByCliente\GetVendasByClienteHandler.cs" />
+    <Compile Include="Handlers\Vendas\Queries\GetVendasByCliente\GetVendasByClienteQuery.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\TesteCamposDealer.Domain\TesteCamposDealer.Domain.csproj">
+      <Project>{BEF32FCF-8B90-47BB-9062-9238A09280BD}</Project>
+      <Name>TesteCamposDealer.Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

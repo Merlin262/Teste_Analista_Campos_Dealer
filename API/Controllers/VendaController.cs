@@ -1,147 +1,111 @@
-﻿using System;
+using MediatR;
+using System;
 using System.Collections.Generic;
+using FluentValidation;
 using System.Linq;
-using System.Web;
-using System.Web.Http;
+using System.Threading.Tasks;
+//using System.Web.Http;
 using System.Web.Mvc;
-using TesteCamposDealer.DB;
+using TesteCamposDealer.Application.Dto;
+using TesteCamposDealer.Application.Handlers.Vendas.Commands.CreateVenda;
+using TesteCamposDealer.Application.Handlers.Vendas.Commands.DeleteVenda;
+using TesteCamposDealer.Application.Handlers.Vendas.Commands.UpdateVenda;
+using TesteCamposDealer.Application.Handlers.Vendas.Queries.GetAllVendas;
+using TesteCamposDealer.Application.Handlers.Vendas.Queries.GetRanking;
+using TesteCamposDealer.Application.Handlers.Vendas.Queries.GetVendaById;
+using TesteCamposDealer.Application.Handlers.Vendas.Queries.GetVendasByCliente;
+using TesteCamposDealer.Mappers;
+using TesteCamposDealer.Web.ViewModels;
 
 namespace TesteCamposDealer.Controllers
 {
-    public class VendaController : ApiController
+    [RoutePrefix("api/vendas")]
+    public class VendaController : Controller
     {
-        /// <summary>
-        /// Recupera a Venda por Id..
-        /// </summary>
-        /// <param name="idVenda"></param>
-        /// <returns></returns>
-        [System.Web.Http.ActionName("GetById")]
-        public Venda GetById(int idVenda)
+        private readonly IMediator _mediator;
+        public VendaController(IMediator mediator) { _mediator = mediator; }
+
+        [HttpGet, Route("")]
+        public async Task<ActionResult> GetAll(int page = 1)
         {
-            Venda vendaRet = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
-            try
-            {
-                vendaRet = (from c in db.Venda
-                          where c.idVenda == idVenda
-                          select c).FirstOrDefault();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return vendaRet;
+            var result = await _mediator.Send(new GetAllVendasQuery(page));
+            return Json(result.ToPagedViewModel(v => v.ToViewModel()), JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// Recupera todas as vendas
-        /// </summary>
-        /// <returns></returns>
-        public List<Venda> GetAll()
+        [HttpGet, Route("ranking")]
+        public async Task<ActionResult> GetRanking()
         {
-            List<Venda> lstVendaret = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
-            try
-            {
-                lstVendaret = (from c in db.Venda
-                             select c).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return lstVendaret;
+            var result = await _mediator.Send(new GetRankingQuery());
+            return Json(result.Select(v => v.ToViewModel()).ToList(), JsonRequestBehavior.AllowGet);
         }
 
-
-        /// <summary>
-        /// Cadastra uma venda
-        /// </summary>
-        /// <param name="cliente"></param>
-        public bool Post([FromBody] Venda vendaDTO)
+        [HttpGet, Route("cliente/{idCliente}")]
+        public async Task<ActionResult> GetByCliente(Guid idCliente)
         {
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
-            try
-            {
-                db.Venda.InsertOnSubmit(vendaDTO);
-                db.SubmitChanges();
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-
-            return true;
+            var result = await _mediator.Send(new GetVendasByClienteQuery(idCliente));
+            if (result == null) { Response.StatusCode = 404; return Json(new { message = $"Cliente '{idCliente}' não encontrado." }, JsonRequestBehavior.AllowGet); }
+            return Json(result.Select(v => v.ToViewModel()).ToList(), JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// Altera uma venda pelo Id
-        /// </summary>
-        /// <param name="idVenda"></param>
-        /// <param name="vendaDTO"></param>
-        [System.Web.Http.ActionName("PutById")]
-        public bool Put(int idVenda, [FromBody] Venda vendaDTO)
+        [HttpGet, Route("{id}")]
+        public async Task<ActionResult> GetById(Guid id)
         {
-            Venda vendaRet = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
-            try
-            {
-                vendaRet = (from c in db.Venda
-                          where c.idVenda == idVenda
-                          select c).FirstOrDefault();
-
-                vendaRet.vlrProduto = vendaDTO.vlrProduto;
-                db.SubmitChanges();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return true;
+            var v = await _mediator.Send(new GetVendaByIdQuery(id));
+            if (v == null) { Response.StatusCode = 404; return Json(new { message = $"Venda '{id}' não encontrada." }, JsonRequestBehavior.AllowGet); }
+            return Json(v.ToViewModel(), JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// Deleta uma venda pelo seu id
-        /// </summary>
-        /// <param name="idCliente"></param>
-        [System.Web.Http.ActionName("DeleteById")]
-        public bool Delete(int idVenda)
+        [HttpPost, Route("")]
+        public async Task<ActionResult> Create(VendaFormViewModel vm)
         {
-            Venda vendaRet = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
             try
             {
-                vendaRet = (from c in db.Venda
-                          where c.idVenda == idVenda
-                          select c).FirstOrDefault();
-
-                db.Venda.DeleteOnSubmit(vendaRet);
-                db.SubmitChanges();
+                var result = await _mediator.Send(new CreateVendaCommand
+                {
+                    idCliente = vm.idCliente,
+                    itens = vm.Itens?.Select(i => new VendaItemRequest { idProduto = i.idProduto, quantidade = i.quantidade }).ToList()
+                              ?? new List<VendaItemRequest>()
+                });
+                Response.StatusCode = 201;
+                return Json(result.ToViewModel());
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                throw ex;
+                Response.StatusCode = 400;
+                return Json(new { errors = ex.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage)) });
             }
-
-            return true;
         }
+
+        [HttpPut, Route("{id}")]
+        public async Task<ActionResult> Update(Guid id, VendaFormViewModel vm)
+        {
+            try
+            {
+                var result = await _mediator.Send(new UpdateVendaCommand
+                {
+                    idVenda = id,
+                    itens = vm.Itens?.Select(i => new VendaItemRequest { idProduto = i.idProduto, quantidade = i.quantidade }).ToList()
+                            ?? new List<VendaItemRequest>()
+                });
+                if (result == null) { Response.StatusCode = 404; return Json(new { message = $"Venda '{id}' não encontrada." }); }
+                return Json(result.ToViewModel());
+            }
+            catch (ValidationException ex)
+            {
+                Response.StatusCode = 400;
+                return Json(new { errors = ex.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage)) });
+            }
+        }
+
+        [HttpDelete, Route("{id}")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            var result = await _mediator.Send(new DeleteVendaCommand(id));
+            if (!result) { Response.StatusCode = 404; return Json(new { message = $"Venda '{id}' não encontrada." }, JsonRequestBehavior.AllowGet); }
+            Response.StatusCode = 204;
+            return new EmptyResult();
+        }
+
     }
 }
+

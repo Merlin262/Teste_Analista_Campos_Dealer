@@ -1,0 +1,25 @@
+@model TesteCamposDealer.Web.ViewModels.ProdutoViewModel
+@{
+    ViewBag.Title = "Novo Produto";
+}
+
+<h2>Novo Produto</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.dscProduto)
+        @Html.TextBoxFor(m => m.dscProduto, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.dscProduto, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.vlrProduto)
+        @Html.TextBoxFor(m => m.vlrProduto, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.vlrProduto, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Cancelar</a>
+}

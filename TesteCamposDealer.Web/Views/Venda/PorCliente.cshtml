@@ -1,0 +1,48 @@
+@model IEnumerable<TesteCamposDealer.Web.ViewModels.VendaViewModel>
+@{
+    var cliente = ViewBag.Cliente as TesteCamposDealer.Web.ViewModels.ClienteViewModel;
+    ViewBag.Title = "Vendas de " + (cliente?.nomeCliente ?? "Cliente");
+}
+
+<h2>Vendas de <strong>@(cliente?.nomeCliente)</strong></h2>
+<p class="text-muted">@(cliente?.endereco)</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">Nenhuma venda encontrada para este cliente.</div>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>Data</th>
+                <th>Valor Total</th>
+                <th>Itens</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var v in Model)
+            {
+                <tr>
+                    <td>@v.dthRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@v.vlrTotal.ToString("C")</td>
+                    <td>@v.itens.Count</td>
+                    <td>
+                        <a href="@Url.Action("Details", new { id = v.idVenda })" class="btn btn-sm btn-info">Detalhes</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-dark">
+                <td><strong>Total</strong></td>
+                <td><strong>@Model.Sum(v => v.vlrTotal).ToString("C")</strong></td>
+                <td colspan="2"></td>
+            </tr>
+        </tfoot>
+    </table>
+}
+
+<a href="@Url.Action("Index", "Cliente")" class="btn btn-outline-secondary">Voltar</a>

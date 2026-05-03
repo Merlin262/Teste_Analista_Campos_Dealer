@@ -1,0 +1,26 @@
+@model TesteCamposDealer.Web.ViewModels.ClienteViewModel
+@{
+    ViewBag.Title = "Editar Cliente";
+}
+
+<h2>Editar Cliente</h2>
+
+@using (Html.BeginForm("Edit", "Cliente", new { id = Model.idCliente }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.idCliente)
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.nomeCliente)
+        @Html.TextBoxFor(m => m.nomeCliente, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.nomeCliente, "", new { @class = "text-danger" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.endereco)
+        @Html.TextBoxFor(m => m.endereco, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.endereco, "", new { @class = "text-danger" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="@Url.Action("Index")" class="btn btn-secondary">Cancelar</a>
+}

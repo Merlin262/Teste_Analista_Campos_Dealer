@@ -1,0 +1,46 @@
+@model TesteCamposDealer.Web.ViewModels.VendaViewModel
+@{
+    ViewBag.Title = "Detalhes da Venda";
+}
+
+<h2>Detalhes da Venda</h2>
+
+<dl class="row">
+    <dt class="col-sm-3">Cliente</dt>
+    <dd class="col-sm-9">@Model.nomeCliente</dd>
+
+    <dt class="col-sm-3">Endereço</dt>
+    <dd class="col-sm-9">@Model.enderecoCliente</dd>
+
+    <dt class="col-sm-3">Data</dt>
+    <dd class="col-sm-9">@Model.dthRegistro.ToString("dd/MM/yyyy HH:mm")</dd>
+
+    <dt class="col-sm-3">Valor Total</dt>
+    <dd class="col-sm-9"><strong>@Model.vlrTotal.ToString("C")</strong></dd>
+</dl>
+
+<h4>Itens</h4>
+<table class="table table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>Produto</th>
+            <th>Quantidade</th>
+            <th>Valor Unitário</th>
+            <th>Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.itens)
+        {
+            <tr>
+                <td>@item.dscProduto</td>
+                <td>@item.quantidade</td>
+                <td>@item.vlrUnitario.ToString("C")</td>
+                <td>@item.vlrTotal.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Edit", new { id = Model.idVenda })" class="btn btn-secondary">Editar</a>
+<a href="@Url.Action("Index")" class="btn btn-outline-secondary">Voltar</a>

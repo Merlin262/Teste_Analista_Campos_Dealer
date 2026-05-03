@@ -1,148 +1,89 @@
-﻿using System;
+using MediatR;
+using System;
 using System.Collections.Generic;
+using FluentValidation;
 using System.Linq;
-using System.Web;
-using System.Web.Http;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using TesteCamposDealer.DB;
+using TesteCamposDealer.Application.Handlers.Produtos.Commands;
+using TesteCamposDealer.Application.Handlers.Produtos.Commands.DeleteProduto;
+using TesteCamposDealer.Application.Handlers.Produtos.Commands.UpdateProduto;
+using TesteCamposDealer.Application.Handlers.Produtos.Queries.GetAllProdutos;
+using TesteCamposDealer.Application.Handlers.Produtos.Queries.GetProdutoById;
+using TesteCamposDealer.Mappers;
+using TesteCamposDealer.Web.ViewModels;
 
 namespace TesteCamposDealer.Controllers
 {
-    public class ProdutoController : ApiController
+    [RoutePrefix("api/produtos")]
+    public class ProdutoController : Controller
     {
-        /// <summary>
-        /// Recupera o Produto por Id..
-        /// </summary>
-        /// <param name="idProduto"></param>
-        /// <returns></returns>
-        [System.Web.Http.ActionName("GetById")]
-        public Produto GetById(int idProduto)
+        private readonly IMediator _mediator;
+        public ProdutoController(IMediator mediator) { _mediator = mediator; }
+
+        [HttpGet, Route("")]
+        public async Task<ActionResult> GetAll(int page = 1)
         {
-            Produto produtoRet = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
-            try
-            {
-                produtoRet = (from c in db.Produto
-                          where c.idProduto == idProduto
-                          select c).FirstOrDefault();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return produtoRet;
+            var result = await _mediator.Send(new GetAllProdutosQuery(page));
+            return Json(result.ToPagedViewModel(p => p.ToViewModel()), JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// Recupera todos os Produtos
-        /// </summary>
-        /// <returns></returns>
-        public List<Produto> GetAll()
+        [HttpGet, Route("{id}")]
+        public async Task<ActionResult> GetById(Guid id)
         {
-            List<Produto> lstProdutoRet = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
-            try
-            {
-                lstProdutoRet = (from c in db.Produto
-                             select c).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return lstProdutoRet;
+            var p = await _mediator.Send(new GetProdutoByIdQuery(id));
+            if (p == null) { Response.StatusCode = 404; return Json(new { message = $"Produto '{id}' não encontrado." }, JsonRequestBehavior.AllowGet); }
+            return Json(p.ToViewModel(), JsonRequestBehavior.AllowGet);
         }
 
-
-        /// <summary>
-        /// Cadastra um Produto
-        /// </summary>
-        /// <param name="produtoDTO"></param>
-        public bool Post([FromBody] Produto produtoDTO)
+        [HttpPost, Route("")]
+        public async Task<ActionResult> Create(ProdutoViewModel vm)
         {
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
             try
             {
-                db.Produto.InsertOnSubmit(produtoDTO);
-                db.SubmitChanges();
+                var result = await _mediator.Send(new CreateProdutoCommand { dscProduto = vm.dscProduto, vlrProduto = vm.vlrProduto });
+                Response.StatusCode = 201;
+                return Json(result.ToViewModel());
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                return false;
+                Response.StatusCode = 400;
+                return Json(new { errors = ex.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage)) });
             }
-
-            return true;
         }
 
-        /// <summary>
-        /// Altera um Produto pelo Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="value"></param>
-        [System.Web.Http.ActionName("PutById")]
-        public bool Put(int idProduto, [FromBody] Produto produtoDTO)
+        [HttpPut, Route("{id}")]
+        public async Task<ActionResult> Update(Guid id, ProdutoViewModel vm)
         {
-            Produto prodRet = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
             try
             {
-                prodRet = (from c in db.Produto
-                          where c.idProduto == idProduto
-                          select c).FirstOrDefault();
-
-                prodRet.dscProduto = produtoDTO.dscProduto;
-                
-                db.SubmitChanges();
+                var result = await _mediator.Send(new UpdateProdutoCommand { idProduto = id, dscProduto = vm.dscProduto, vlrProduto = vm.vlrProduto });
+                if (result == null) { Response.StatusCode = 404; return Json(new { message = $"Produto '{id}' não encontrado." }); }
+                return Json(result.ToViewModel());
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                throw ex;
+                Response.StatusCode = 400;
+                return Json(new { errors = ex.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage)) });
             }
-
-            return true;
         }
 
-        /// <summary>
-        /// Deleta um Produto pelo seu id
-        /// </summary>
-        /// <param name="idProduto"></param>
-        [System.Web.Http.ActionName("DeleteById")]
-        public bool Delete(int idProduto)
+        [HttpDelete, Route("{id}")]
+        public async Task<ActionResult> Delete(Guid id)
         {
-            Produto prodRet = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
             try
             {
-                prodRet = (from c in db.Produto
-                          where c.idProduto == idProduto
-                          select c).FirstOrDefault();
-
-                db.Produto.DeleteOnSubmit(prodRet);
-                db.SubmitChanges();
+                var result = await _mediator.Send(new DeleteProdutoCommand(id));
+                if (!result) { Response.StatusCode = 404; return Json(new { message = $"Produto '{id}' não encontrado." }, JsonRequestBehavior.AllowGet); }
+                Response.StatusCode = 204;
+                return new EmptyResult();
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                throw ex;
+                Response.StatusCode = 409;
+                return Json(new { message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
-
-            return true;
         }
+
     }
 }

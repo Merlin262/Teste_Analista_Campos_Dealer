@@ -1,0 +1,36 @@
+@model IEnumerable<TesteCamposDealer.Web.ViewModels.VendaViewModel>
+@{
+    ViewBag.Title = "Ranking de Vendas";
+}
+
+<h2>Ranking de Vendas</h2>
+
+<table class="table table-striped table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th>#</th>
+            <th>Cliente</th>
+            <th>Valor Total</th>
+            <th>Data</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ int pos = 1; }
+        @foreach (var v in Model)
+        {
+            <tr>
+                <td><strong>@pos</strong></td>
+                <td>@v.nomeCliente</td>
+                <td>@v.vlrTotal.ToString("C")</td>
+                <td>@v.dthRegistro.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    <a href="@Url.Action("Details", new { id = v.idVenda })" class="btn btn-sm btn-info">Detalhes</a>
+                </td>
+            </tr>
+            pos++;
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Index")" class="btn btn-outline-secondary">Voltar</a>

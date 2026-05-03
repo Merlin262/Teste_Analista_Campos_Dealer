@@ -1,148 +1,89 @@
-﻿using System;
+using MediatR;
+using System;
 using System.Collections.Generic;
+using FluentValidation;
 using System.Linq;
-using System.Web;
-using System.Web.Http;
+using System.Threading.Tasks;
 using System.Web.Mvc;
-using TesteCamposDealer.DB;
+using TesteCamposDealer.Application.Handlers.Clientes.Commands;
+using TesteCamposDealer.Application.Handlers.Clientes.Commands.DeleteCliente;
+using TesteCamposDealer.Application.Handlers.Clientes.Commands.UpdateCliente;
+using TesteCamposDealer.Application.Handlers.Clientes.Queries.GetAllClientes;
+using TesteCamposDealer.Application.Handlers.Clientes.Queries.GetClienteById;
+using TesteCamposDealer.Mappers;
+using TesteCamposDealer.Web.ViewModels;
 
 namespace TesteCamposDealer.Controllers
 {
-    public class ClienteController : ApiController
+    [RoutePrefix("api/clientes")]
+    public class ClienteController : Controller
     {
-        /// <summary>
-        /// Recupera o Cliente por Id..
-        /// </summary>
-        /// <param name="idCliente"></param>
-        /// <returns></returns>
-        [System.Web.Http.ActionName("GetById")]
-        public Cliente GetById(int idCliente)
+        private readonly IMediator _mediator;
+        public ClienteController(IMediator mediator) { _mediator = mediator; }
+
+        [HttpGet, Route("")]
+        public async Task<ActionResult> GetAll(int page = 1)
         {
-            Cliente cliret = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
-            try
-            {
-                cliret = (from c in db.Cliente
-                          where c.idCliente == idCliente
-                          select c).FirstOrDefault();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return cliret;
+            var result = await _mediator.Send(new GetAllClientesQuery(page));
+            return Json(result.ToPagedViewModel(c => c.ToViewModel()), JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// Recupera todos os clientes
-        /// </summary>
-        /// <returns></returns>
-        public List<Cliente> GetAll()
+        [HttpGet, Route("{id}")]
+        public async Task<ActionResult> GetById(Guid id)
         {
-            List<Cliente> lstCliRet = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
-            try
-            {
-                lstCliRet = (from c in db.Cliente
-                          select c).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return lstCliRet;
+            var c = await _mediator.Send(new GetClienteByIdQuery(id));
+            if (c == null) { Response.StatusCode = 404; return Json(new { message = $"Cliente '{id}' não encontrado." }, JsonRequestBehavior.AllowGet); }
+            return Json(c.ToViewModel(), JsonRequestBehavior.AllowGet);
         }
 
-
-        /// <summary>
-        /// Cadastra um Cliente
-        /// </summary>
-        /// <param name="cliente"></param>
-        public bool Post([FromBody] Cliente clienteDTO)
+        [HttpPost, Route("")]
+        public async Task<ActionResult> Create(ClienteViewModel vm)
         {
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
             try
             {
-                db.Cliente.InsertOnSubmit(clienteDTO);
-                db.SubmitChanges();
+                var result = await _mediator.Send(new CreateClienteCommand { nomeCliente = vm.nomeCliente, endereco = vm.endereco });
+                Response.StatusCode = 201;
+                return Json(result.ToViewModel());
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                return false;
+                Response.StatusCode = 400;
+                return Json(new { errors = ex.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage)) });
             }
-
-            return true;
         }
 
-        /// <summary>
-        /// Altera um Cliente pelo Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="value"></param>
-        [System.Web.Http.ActionName("PutById")]
-        public bool Put(int idCliente, [FromBody] Cliente clienteDTO)
+        [HttpPut, Route("{id}")]
+        public async Task<ActionResult> Update(Guid id, ClienteViewModel vm)
         {
-            Cliente cliret = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
             try
             {
-                cliret = (from c in db.Cliente
-                          where c.idCliente == idCliente
-                          select c).FirstOrDefault();
-
-                cliret.endereco = clienteDTO.endereco;
-                cliret.nomeCliente = clienteDTO.nomeCliente;
-                db.SubmitChanges();
+                var result = await _mediator.Send(new UpdateClienteCommand { idCliente = id, nomeCliente = vm.nomeCliente, endereco = vm.endereco });
+                if (result == null) { Response.StatusCode = 404; return Json(new { message = $"Cliente '{id}' não encontrado." }); }
+                return Json(result.ToViewModel());
             }
-            catch (Exception ex)
+            catch (ValidationException ex)
             {
-                throw ex;
+                Response.StatusCode = 400;
+                return Json(new { errors = ex.Errors.GroupBy(e => e.PropertyName).ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage)) });
             }
-
-            return true;
         }
 
-        /// <summary>
-        /// Deleta um cliente pelo seu id
-        /// </summary>
-        /// <param name="idCliente"></param>
-        [System.Web.Http.ActionName("DeleteById")]
-        public bool Delete(int idCliente)
+        [HttpDelete, Route("{id}")]
+        public async Task<ActionResult> Delete(Guid id)
         {
-            Cliente cliret = null;
-
-            DBTesteCamposDealerDataContext db = new DBTesteCamposDealerDataContext();
-            db.DeferredLoadingEnabled = false;
-
             try
             {
-                cliret = (from c in db.Cliente
-                          where c.idCliente == idCliente
-                          select c).FirstOrDefault();
-
-                db.Cliente.DeleteOnSubmit(cliret);
-                db.SubmitChanges();
+                var result = await _mediator.Send(new DeleteClienteCommand(id));
+                if (!result) { Response.StatusCode = 404; return Json(new { message = $"Cliente '{id}' não encontrado." }, JsonRequestBehavior.AllowGet); }
+                Response.StatusCode = 204;
+                return new EmptyResult();
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                throw ex;
+                Response.StatusCode = 409;
+                return Json(new { message = ex.Message }, JsonRequestBehavior.AllowGet);
             }
-
-            return true;
         }
+
     }
 }
