@@ -33,15 +33,14 @@ namespace TesteCamposDealer.Tests.Handlers.Vendas
         }
 
         [Fact]
-        public async Task Handle_DeveRetornarNull_QuandoVendaNaoExiste()
+        public async Task Handle_DeveLancarNotFoundException_QuandoVendaNaoExiste()
         {
             _vendaRepo.Setup(r => r.GetByIdWithItensAsync(It.IsAny<Guid>())).ReturnsAsync((Venda)null);
 
-            var result = await _handler.Handle(
-                new UpdateVendaCommand { idVenda = Guid.NewGuid(), itens = new List<VendaItemRequest>() },
-                CancellationToken.None);
+            await Assert.ThrowsAsync<NotFoundException>(() =>
+                _handler.Handle(new UpdateVendaCommand { idVenda = Guid.NewGuid(), itens = new List<VendaItemRequest>() },
+                    CancellationToken.None));
 
-            Assert.Null(result);
             _uow.Verify(u => u.CommitAsync(), Times.Never);
         }
 

@@ -21,7 +21,7 @@ namespace TesteCamposDealer.Application.Handlers.Vendas.Commands.UpdateVenda
         {
             var venda = await _uow.Vendas.GetByIdWithItensAsync(request.idVenda);
             if (venda == null)
-                return null;
+                throw new NotFoundException("Venda", request.idVenda);
 
             var itensAntigos = venda.Itens.ToList();
             _uow.Vendas.RemoveItens(itensAntigos);

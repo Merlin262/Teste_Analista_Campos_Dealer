@@ -232,17 +232,20 @@ O `AppDbContext` desabilita proxy e lazy loading. Todas as queries que precisam 
 
 ## 10. Autoavaliação Técnica
 
+### Testes de Integração
+Possuo boa familiaridade com testes de integração, validando o funcionamento de endpoints e regras de negócio por meio de chamadas estruturadas e documentadas no Postman. Neste projeto, todos os endpoints foram documentados (arquivo *CamposDealer.postman_collection.json*), garantindo rastreabilidade e facilidade de validação. Além disso, a cobertura de testes supera 80% (conforme evidenciado abaixo), reforçando a confiabilidade das implementações.
+
+![Cobertura de Testes](CodeCoverage.png)
+
 ### Backend
-Experiência com ASP.NET MVC 5 (.NET Framework), Entity Framework 6 (Code First, migrations, repositórios genéricos) e padrões CQRS + MediatR. Implementação de pipeline de validação com `IPipelineBehavior`, tratamento de exceções tipadas mapeadas para respostas JSON, e Unit of Work para transações consistentes. Separação em projetos seguindo Clean Architecture (Domain → Application → Infrastructure → API).
+Tenho experiência sólida no desenvolvimento de APIs utilizando .NET 8 (ou superior) e também com aplicações em ASP.NET MVC (.NET Framework 4.8). Sou capaz de estruturar, manter e evoluir APIs sem esforço.  
+Em persistência de dados, possuo experiência com Entity Framework Core e Entity Framework, além de conhecimento em SQL Server demais tipos de banco relacionais. Também aplico boas práticas de logging e tratamento de exceções para garantir observabilidade e resiliência das aplicações.
 
 ### Frontend
-Desenvolvimento com Razor (CSHTML), Bootstrap 4 e jQuery. Formulários com adição e remoção dinâmica de itens via JavaScript puro sem dependências adicionais, cálculo de totais em tempo real e binding de model via `IList<T>` com índices nomeados. Projeto Web desacoplado do domínio — consome a API via HttpClient.
-
-### Testes
-Escrita de testes unitários com xUnit e Moq. Isolamento de repositórios EF6 via mocks de `DbSet<T>` com infraestrutura assíncrona customizada (`IDbAsyncQueryProvider`, `TestDbAsyncEnumerable`). Cobertura de handlers (lógica de negócio) e repositórios (consultas e operações de escrita).
+Tenho experiência com desenvolvimento frontend utilizando Angular e React (com TypeScript), além de páginas Razor em projetos ASP.NET MVC. Consigo manter e evoluir interfaces existentes, garantindo integração adequada com o backend e boa organização do código.
 
 ### Ferramentas
-Visual Studio 2022, SQL Server Management Studio, Postman para validação de fluxos HTTP, Git para controle de versão.
+Tenho domínio das principais ferramentas de desenvolvimento, incluindo Visual Studio e SQL Server Management Studio. Utilizo Postman e Insomnia para validação de fluxos HTTP e testes de APIs, além de Git para controle de versão e colaboração em equipe.
 
 ### Processos
-Familiaridade com metodologia SCRUM (sprints, refinamento, review); depuração com breakpoints, watch expressions e análise de stack trace; identificação de causa-raiz de bugs via logs de exceção.
+Possuo familiaridade com a metodologia SCRUM, participando ativamente de cerimônias como planejamento de sprints, refinamento e reviews. Tenho experiência com testes unitários e integrados, depuração de código utilizando breakpoints, além de atuação na correção de bugs e análise de problemas em produção com apoio de ferramentas de telemetria.

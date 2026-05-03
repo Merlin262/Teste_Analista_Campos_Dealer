@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TesteCamposDealer.Application.Exceptions;
 using TesteCamposDealer.Domain.Interface;
 using TesteCamposDealer.Models;
 
@@ -19,7 +20,7 @@ namespace TesteCamposDealer.Application.Handlers.Clientes.Commands.UpdateCliente
         {
             var cliente = await _uow.Clientes.GetByIdAsync(request.idCliente);
             if (cliente == null)
-                return null;
+                throw new NotFoundException("Cliente", request.idCliente);
 
             cliente.nomeCliente = request.nomeCliente;
             cliente.endereco = request.endereco;

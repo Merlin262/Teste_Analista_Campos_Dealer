@@ -180,6 +180,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProdutoController.cs" />
     <Compile Include="Controllers\VendaController.cs" />
+    <Compile Include="Filters\GlobalExceptionFilter.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

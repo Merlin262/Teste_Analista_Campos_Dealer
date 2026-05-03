@@ -1,10 +1,7 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using TesteCamposDealer.Application.Exceptions;
 using TesteCamposDealer.Domain.Interface;
 using TesteCamposDealer.Models;
 
@@ -15,7 +12,12 @@ namespace TesteCamposDealer.Application.Handlers.Produtos.Queries.GetProdutoById
         private readonly IUnitOfWork _uow;
         public GetProdutoByIdHandler(IUnitOfWork uow) { _uow = uow; }
 
-        public Task<Produto> Handle(GetProdutoByIdQuery request, CancellationToken cancellationToken)
-            => _uow.Produtos.GetByIdAsync(request.IdProduto);
+        public async Task<Produto> Handle(GetProdutoByIdQuery request, CancellationToken cancellationToken)
+        {
+            var produto = await _uow.Produtos.GetByIdAsync(request.IdProduto);
+            if (produto == null)
+                throw new NotFoundException("Produto", request.IdProduto);
+            return produto;
+        }
     }
 }

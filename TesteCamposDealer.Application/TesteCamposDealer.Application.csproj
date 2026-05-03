@@ -75,6 +75,7 @@
     <Compile Include="Behaviors\ValidationBehavior.cs" />
     <Compile Include="Common\PagedResult.cs" />
     <Compile Include="Dto\VendaItemRequest.cs" />
+    <Compile Include="Exceptions\BusinessRuleException.cs" />
     <Compile Include="Exceptions\NotFoundException.cs" />
     <Compile Include="Handlers\Clientes\Commands\CreateCliente\CreateClienteCommand.cs" />
     <Compile Include="Handlers\Clientes\Commands\CreateCliente\CreateClienteHandler.cs" />

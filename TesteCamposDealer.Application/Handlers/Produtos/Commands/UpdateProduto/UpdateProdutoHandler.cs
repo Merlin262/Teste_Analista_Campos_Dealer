@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TesteCamposDealer.Application.Exceptions;
 using TesteCamposDealer.Domain.Interface;
 using TesteCamposDealer.Models;
 
@@ -20,7 +21,7 @@ namespace TesteCamposDealer.Application.Handlers.Produtos.Commands.UpdateProduto
         {
             var produto = await _uow.Produtos.GetByIdAsync(request.idProduto);
             if (produto == null)
-                return null;
+                throw new NotFoundException("Produto", request.idProduto);
 
             if (produto.vlrProduto != request.vlrProduto)
             {

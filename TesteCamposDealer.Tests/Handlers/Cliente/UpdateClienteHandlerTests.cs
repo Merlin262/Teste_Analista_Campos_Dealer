@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TesteCamposDealer.Application.Exceptions;
 using TesteCamposDealer.Application.Handlers.Clientes.Commands.UpdateCliente;
 using TesteCamposDealer.Domain.Interface;
 using TesteCamposDealer.Models;
@@ -43,14 +44,13 @@ namespace TesteCamposDealer.Tests.Handlers
         }
 
         [Fact]
-        public async Task Handle_DeveRetornarNull_QuandoNaoExiste()
+        public async Task Handle_DeveLancarNotFoundException_QuandoNaoExiste()
         {
             _repo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Cliente)null);
 
-            var result = await _handler.Handle(
-                new UpdateClienteCommand { idCliente = Guid.NewGuid() }, CancellationToken.None);
+            await Assert.ThrowsAsync<NotFoundException>(() =>
+                _handler.Handle(new UpdateClienteCommand { idCliente = Guid.NewGuid() }, CancellationToken.None));
 
-            Assert.Null(result);
             _uow.Verify(u => u.CommitAsync(), Times.Never);
         }
     }

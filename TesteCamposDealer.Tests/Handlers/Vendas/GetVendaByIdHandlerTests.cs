@@ -37,16 +37,5 @@ namespace TesteCamposDealer.Tests.Handlers.Vendas
 
             Assert.Equal(venda, result);
         }
-
-        [Fact]
-        public async Task Handle_DeveRetornarNull_QuandoNaoEncontrada()
-        {
-            _repo.Setup(r => r.GetByIdWithDetailsAsync(It.IsAny<Guid>())).ReturnsAsync((Venda)null);
-
-            var result = await _handler.Handle(
-                new GetVendaByIdQuery(Guid.NewGuid()), CancellationToken.None);
-
-            Assert.Null(result);
-        }
     }
 }

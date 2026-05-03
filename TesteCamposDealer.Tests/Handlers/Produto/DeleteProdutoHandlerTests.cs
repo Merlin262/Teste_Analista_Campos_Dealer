@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TesteCamposDealer.Application.Exceptions;
 using TesteCamposDealer.Application.Handlers.Produtos.Commands.DeleteProduto;
 using TesteCamposDealer.Domain.Interface;
 using TesteCamposDealer.Models;
@@ -28,14 +29,13 @@ namespace TesteCamposDealer.Tests.Handlers
         }
 
         [Fact]
-        public async Task Handle_DeveRetornarFalse_QuandoNaoExiste()
+        public async Task Handle_DeveLancarNotFoundException_QuandoNaoExiste()
         {
             _repo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Produto)null);
 
-            var result = await _handler.Handle(
-                new DeleteProdutoCommand(Guid.NewGuid()), CancellationToken.None);
+            await Assert.ThrowsAsync<NotFoundException>(() =>
+                _handler.Handle(new DeleteProdutoCommand(Guid.NewGuid()), CancellationToken.None));
 
-            Assert.False(result);
             _uow.Verify(u => u.CommitAsync(), Times.Never);
         }
     }

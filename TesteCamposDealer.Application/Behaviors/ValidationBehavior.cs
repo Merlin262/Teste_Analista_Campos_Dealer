@@ -2,7 +2,7 @@
 using MediatR;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+//using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -27,8 +27,8 @@ namespace TesteCamposDealer.Application.Behaviors
                 .SelectMany(r => r.Errors)
                 .ToList();
 
-            //if (errors.Any())
-            //    throw new ValidationException(errors);
+            if (errors.Any())
+                throw new ValidationException(errors);
 
             return next();
         }

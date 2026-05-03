@@ -1,5 +1,5 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using TesteCamposDealer.Filters;
 
 namespace TesteCamposDealer
 {
@@ -7,7 +7,7 @@ namespace TesteCamposDealer
     {
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            filters.Add(new GlobalExceptionFilter());
         }
     }
 }

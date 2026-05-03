@@ -1,10 +1,7 @@
-﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using TesteCamposDealer.Application.Exceptions;
 using TesteCamposDealer.Domain.Interface;
 
 namespace TesteCamposDealer.Application.Handlers.Vendas.Commands.DeleteVenda
@@ -18,7 +15,7 @@ namespace TesteCamposDealer.Application.Handlers.Vendas.Commands.DeleteVenda
         {
             var venda = await _uow.Vendas.GetByIdAsync(request.IdVenda);
             if (venda == null)
-                return false;
+                throw new NotFoundException("Venda", request.IdVenda);
 
             _uow.Vendas.Remove(venda);
             await _uow.CommitAsync();

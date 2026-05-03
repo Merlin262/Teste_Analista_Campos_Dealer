@@ -1,10 +1,8 @@
-﻿using MediatR;
-using System;
+using MediatR;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using TesteCamposDealer.Application.Exceptions;
 using TesteCamposDealer.Domain.Interface;
 using TesteCamposDealer.Models;
 
@@ -19,7 +17,7 @@ namespace TesteCamposDealer.Application.Handlers.Vendas.Queries.GetVendasByClien
         {
             var cliente = await _uow.Clientes.GetByIdAsync(request.IdCliente);
             if (cliente == null)
-                return null;
+                throw new NotFoundException("Cliente", request.IdCliente);
 
             return await _uow.Vendas.GetByClienteAsync(request.IdCliente);
         }

@@ -44,15 +44,5 @@ namespace TesteCamposDealer.Tests.Handlers.Vendas
             Assert.Equal(2, result.Count);
         }
 
-        [Fact]
-        public async Task Handle_DeveRetornarNull_QuandoClienteNaoExiste()
-        {
-            _clienteRepo.Setup(r => r.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync((Cliente)null);
-
-            var result = await _handler.Handle(
-                new GetVendasByClienteQuery(Guid.NewGuid()), CancellationToken.None);
-
-            Assert.Null(result);
-        }
     }
 }
