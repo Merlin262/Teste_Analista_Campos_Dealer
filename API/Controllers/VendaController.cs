@@ -1,4 +1,5 @@
 using MediatR;
+using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Retorna a lista paginada de vendas. Cada venda contém o cliente, a lista de itens com quantidade e valor unitário, e o valor total sumarizado.</summary>
         /// <param name="page">Número da página (padrão: 1).</param>
+        [SwaggerResponse(HttpStatusCode.OK, "Lista paginada de vendas.", typeof(PagedResultViewModel<VendaViewModel>))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpGet, Route("")]
         public async Task<IHttpActionResult> GetAll(int page = 1)
         {
@@ -35,6 +38,8 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Retorna o ranking paginado das maiores vendas realizadas, ordenado pelo valor total decrescente.</summary>
         /// <param name="page">Número da página (padrão: 1).</param>
+        [SwaggerResponse(HttpStatusCode.OK, "Ranking paginado de vendas.", typeof(PagedResultViewModel<VendaViewModel>))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpGet, Route("ranking")]
         public async Task<IHttpActionResult> GetRanking(int page = 1)
         {
@@ -45,6 +50,9 @@ namespace TesteCamposDealer.Controllers
         /// <summary>Retorna as vendas paginadas vinculadas a um cliente específico, incluindo itens e valor total de cada venda.</summary>
         /// <param name="idCliente">Identificador único do cliente (GUID).</param>
         /// <param name="page">Número da página (padrão: 1).</param>
+        [SwaggerResponse(HttpStatusCode.OK, "Vendas do cliente.", typeof(PagedResultViewModel<VendaViewModel>))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Cliente não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpGet, Route("cliente/{idCliente}")]
         public async Task<IHttpActionResult> GetByCliente(Guid idCliente, int page = 1)
         {
@@ -54,6 +62,9 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Retorna os dados de uma venda pelo seu identificador único, incluindo todos os itens e o valor total.</summary>
         /// <param name="id">Identificador único da venda (GUID).</param>
+        [SwaggerResponse(HttpStatusCode.OK, "Venda encontrada.", typeof(VendaViewModel))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Venda não encontrada.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpGet, Route("{id}")]
         public async Task<IHttpActionResult> GetById(Guid id)
         {
@@ -63,6 +74,11 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Registra uma nova venda vinculada a um cliente. Cada item deve informar o produto e a quantidade. O valor unitário é capturado do cadastro de produtos no momento da venda e preservado no histórico. Retorna o objeto persistido com status 201 Created.</summary>
         /// <param name="vm">Dados da venda: ID do cliente e lista de itens (idProduto, quantidade).</param>
+        [SwaggerResponse(HttpStatusCode.Created, "Venda registrada com sucesso.", typeof(VendaViewModel))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Dados inválidos.", typeof(ApiValidationErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Cliente ou produto não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.Conflict, "Regra de negócio violada.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpPost, Route("")]
         public async Task<IHttpActionResult> Create(VendaFormViewModel vm)
         {
@@ -78,6 +94,11 @@ namespace TesteCamposDealer.Controllers
         /// <summary>Atualiza os itens de uma venda existente. O valor unitário de cada produto é recapturado no momento da atualização. Retorna o objeto atualizado.</summary>
         /// <param name="id">Identificador único da venda (GUID).</param>
         /// <param name="vm">Nova lista de itens da venda (idProduto, quantidade).</param>
+        [SwaggerResponse(HttpStatusCode.OK, "Venda atualizada com sucesso.", typeof(VendaViewModel))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Dados inválidos.", typeof(ApiValidationErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Venda ou produto não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.Conflict, "Regra de negócio violada.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpPut, Route("{id}")]
         public async Task<IHttpActionResult> Update(Guid id, VendaFormViewModel vm)
         {
@@ -92,6 +113,9 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Remove uma venda pelo seu identificador único. Retorna 204 No Content.</summary>
         /// <param name="id">Identificador único da venda (GUID).</param>
+        [SwaggerResponse(HttpStatusCode.NoContent, "Venda removida com sucesso.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Venda não encontrada.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpDelete, Route("{id}")]
         public async Task<IHttpActionResult> Delete(Guid id)
         {

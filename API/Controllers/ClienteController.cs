@@ -23,7 +23,7 @@ namespace TesteCamposDealer.Controllers
         /// <summary>Retorna a lista paginada de clientes cadastrados.</summary>
         /// <param name="page">Número da página (padrão: 1).</param>
         [SwaggerResponse(HttpStatusCode.OK, "Lista paginada de clientes.", typeof(PagedResultViewModel<ClienteViewModel>))]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.")]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpGet, Route("")]
         public async Task<IHttpActionResult> GetAll(int page = 1)
         {
@@ -34,8 +34,8 @@ namespace TesteCamposDealer.Controllers
         /// <summary>Retorna os dados de um cliente pelo seu identificador único.</summary>
         /// <param name="id">Identificador único do cliente (GUID).</param>
         [SwaggerResponse(HttpStatusCode.OK, "Cliente encontrado.", typeof(ClienteViewModel))]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Cliente não encontrado.")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Cliente não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpGet, Route("{id}")]
         public async Task<IHttpActionResult> GetById(Guid id)
         {
@@ -46,8 +46,8 @@ namespace TesteCamposDealer.Controllers
         /// <summary>Cadastra um novo cliente. Retorna o objeto persistido com status 201 Created.</summary>
         /// <param name="vm">Dados do cliente: nome e endereço.</param>
         [SwaggerResponse(HttpStatusCode.Created, "Cliente cadastrado com sucesso.", typeof(ClienteViewModel))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Dados inválidos.")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Dados inválidos.", typeof(ApiValidationErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpPost, Route("")]
         public async Task<IHttpActionResult> Create(ClienteViewModel vm)
         {
@@ -59,9 +59,9 @@ namespace TesteCamposDealer.Controllers
         /// <param name="id">Identificador único do cliente (GUID).</param>
         /// <param name="vm">Novos dados do cliente: nome e endereço.</param>
         [SwaggerResponse(HttpStatusCode.OK, "Cliente atualizado com sucesso.", typeof(ClienteViewModel))]
-        [SwaggerResponse(HttpStatusCode.BadRequest, "Dados inválidos.")]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Cliente não encontrado.")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.")]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Dados inválidos.", typeof(ApiValidationErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Cliente não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpPut, Route("{id}")]
         public async Task<IHttpActionResult> Update(Guid id, ClienteViewModel vm)
         {
@@ -72,8 +72,8 @@ namespace TesteCamposDealer.Controllers
         /// <summary>Remove um cliente pelo seu identificador único. Retorna 204 No Content.</summary>
         /// <param name="id">Identificador único do cliente (GUID).</param>
         [SwaggerResponse(HttpStatusCode.NoContent, "Cliente removido com sucesso.")]
-        [SwaggerResponse(HttpStatusCode.NotFound, "Cliente não encontrado.")]
-        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Cliente não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpDelete, Route("{id}")]
         public async Task<IHttpActionResult> Delete(Guid id)
         {

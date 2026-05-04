@@ -6,9 +6,6 @@ using System.Reflection;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Dependencies;
-using System.Web.Mvc;
-using System.Web.Optimization;
-using System.Web.Routing;
 using TesteCamposDealer.Application.Handlers.Clientes.Queries.GetAllClientes;
 using TesteCamposDealer.Controllers;
 using TesteCamposDealer.Infrastructure.Data;
@@ -20,25 +17,12 @@ namespace TesteCamposDealer
     {
         protected void Application_Start()
         {
-            AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             var appAssembly = typeof(GetAllClientesHandler).Assembly;
             var mediator = BuildMediator(appAssembly);
 
             GlobalConfiguration.Configuration.DependencyResolver = new MediatorDependencyResolver(mediator);
-
-            DependencyResolver.SetResolver(
-                serviceType =>
-                {
-                    if (serviceType == typeof(HomeController)) return new HomeController();
-                    return null;
-                },
-                serviceType => Enumerable.Empty<object>()
-            );
         }
 
         private static IMediator BuildMediator(Assembly appAssembly)

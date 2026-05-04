@@ -1,4 +1,5 @@
 using MediatR;
+using Swashbuckle.Swagger.Annotations;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -21,6 +22,8 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Retorna a lista paginada de produtos cadastrados.</summary>
         /// <param name="page">Número da página (padrão: 1).</param>
+        [SwaggerResponse(HttpStatusCode.OK, "Lista paginada de produtos.", typeof(PagedResultViewModel<ProdutoViewModel>))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpGet, Route("")]
         public async Task<IHttpActionResult> GetAll(int page = 1)
         {
@@ -30,6 +33,9 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Retorna os dados de um produto pelo seu identificador único.</summary>
         /// <param name="id">Identificador único do produto (GUID).</param>
+        [SwaggerResponse(HttpStatusCode.OK, "Produto encontrado.", typeof(ProdutoViewModel))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Produto não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpGet, Route("{id}")]
         public async Task<IHttpActionResult> GetById(Guid id)
         {
@@ -39,6 +45,9 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Cadastra um novo produto com descrição e valor unitário. Retorna o objeto persistido com status 201 Created. O valor é registrado no histórico de preços para rastreabilidade.</summary>
         /// <param name="vm">Dados do produto: descrição e valor unitário.</param>
+        [SwaggerResponse(HttpStatusCode.Created, "Produto cadastrado com sucesso.", typeof(ProdutoViewModel))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Dados inválidos.", typeof(ApiValidationErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpPost, Route("")]
         public async Task<IHttpActionResult> Create(ProdutoViewModel vm)
         {
@@ -49,6 +58,10 @@ namespace TesteCamposDealer.Controllers
         /// <summary>Atualiza a descrição e o valor de um produto existente. O novo valor é registrado no histórico de preços para garantir rastreabilidade financeira. Retorna o objeto atualizado.</summary>
         /// <param name="id">Identificador único do produto (GUID).</param>
         /// <param name="vm">Novos dados do produto: descrição e valor unitário.</param>
+        [SwaggerResponse(HttpStatusCode.OK, "Produto atualizado com sucesso.", typeof(ProdutoViewModel))]
+        [SwaggerResponse(HttpStatusCode.BadRequest, "Dados inválidos.", typeof(ApiValidationErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Produto não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpPut, Route("{id}")]
         public async Task<IHttpActionResult> Update(Guid id, ProdutoViewModel vm)
         {
@@ -58,6 +71,9 @@ namespace TesteCamposDealer.Controllers
 
         /// <summary>Remove um produto pelo seu identificador único. Retorna 204 No Content.</summary>
         /// <param name="id">Identificador único do produto (GUID).</param>
+        [SwaggerResponse(HttpStatusCode.NoContent, "Produto removido com sucesso.")]
+        [SwaggerResponse(HttpStatusCode.NotFound, "Produto não encontrado.", typeof(ApiErrorResponse))]
+        [SwaggerResponse(HttpStatusCode.InternalServerError, "Erro interno no servidor.", typeof(ApiErrorResponse))]
         [HttpDelete, Route("{id}")]
         public async Task<IHttpActionResult> Delete(Guid id)
         {
