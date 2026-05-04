@@ -13,7 +13,20 @@
           "name": "GetAll",
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "https://localhost:44302/api/clientes?page=1",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "clientes"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
           },
           "response": []
         },
@@ -22,33 +35,104 @@
           "request": {
             "method": "GET",
             "header": [],
-            "description": "[https://localhost:44302/api/clientes/{idCliente}](https://localhost:44302/api/clientes/{idCliente})"
+            "url": {
+              "raw": "https://localhost:44302/api/clientes/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "clientes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "CreateCliente",
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomeCliente\": \"\",\n  \"endereco\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:44302/api/clientes",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "clientes"]
+            }
           },
           "response": []
         },
         {
           "name": "UpdateCliente",
           "request": {
-            "method": "GET",
-            "header": [],
-            "description": "[https://localhost:44302/api/clientes/{idCliente}](https://localhost:44302/api/clientes/{idCliente})"
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomeCliente\": \"\",\n  \"endereco\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:44302/api/clientes/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "clientes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "DeleteCliente",
           "request": {
-            "method": "GET",
+            "method": "DELETE",
             "header": [],
-            "description": "[https://localhost:44302/api/clientes/{idCliente}](https://localhost:44302/api/clientes/{idCliente})"
+            "url": {
+              "raw": "https://localhost:44302/api/clientes/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "clientes", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         }
@@ -61,7 +145,20 @@
           "name": "GetAll",
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "https://localhost:44302/api/produtos?page=1",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "produtos"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
           },
           "response": []
         },
@@ -70,33 +167,104 @@
           "request": {
             "method": "GET",
             "header": [],
-            "description": "[https://localhost:44302/api/produtos/{idProduto}](https://localhost:44302/api/produtos/{idProduto})"
+            "url": {
+              "raw": "https://localhost:44302/api/produtos/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "produtos", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "CreateProduto",
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dscProduto\": \"\",\n  \"vlrProduto\": 0.01\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:44302/api/produtos",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "produtos"]
+            }
           },
           "response": []
         },
         {
           "name": "UpdateProduto",
           "request": {
-            "method": "GET",
-            "header": [],
-            "description": "[https://localhost:44302/api/produtos/{idProduto}](https://localhost:44302/api/produtos/{idProduto})"
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dscProduto\": \"\",\n  \"vlrProduto\": 0.01\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:44302/api/produtos/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "produtos", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "DeleteProduto",
           "request": {
-            "method": "GET",
+            "method": "DELETE",
             "header": [],
-            "description": "https://localhost:44302/api/produtos/{idProduto}"
+            "url": {
+              "raw": "https://localhost:44302/api/produtos/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "produtos", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         }
@@ -109,7 +277,20 @@
           "name": "GetAll",
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "https://localhost:44302/api/vendas?page=1",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "vendas"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
           },
           "response": []
         },
@@ -117,7 +298,14 @@
           "name": "Ranking",
           "request": {
             "method": "GET",
-            "header": []
+            "header": [],
+            "url": {
+              "raw": "https://localhost:44302/api/vendas/ranking",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "vendas", "ranking"]
+            }
           },
           "response": []
         },
@@ -126,7 +314,19 @@
           "request": {
             "method": "GET",
             "header": [],
-            "description": "[https://localhost:44302/api/vendas/{idCliente}](https://localhost:44302/api/vendas/{idVenda}EndFragment)"
+            "url": {
+              "raw": "https://localhost:44302/api/vendas/cliente/:idCliente",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "vendas", "cliente", ":idCliente"],
+              "variable": [
+                {
+                  "key": "idCliente",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         },
@@ -135,33 +335,104 @@
           "request": {
             "method": "GET",
             "header": [],
-            "description": "[https://localhost:44302/api/vendas/{idVenda}](https://localhost:44302/api/vendas/{idVenda}EndFragment)"
+            "url": {
+              "raw": "https://localhost:44302/api/vendas/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "vendas", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "CreateVendas",
           "request": {
-            "method": "GET",
-            "header": []
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCliente\": \"\",\n  \"itens\": [\n    {\n      \"idProduto\": \"\",\n      \"quantidade\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:44302/api/vendas",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "vendas"]
+            }
           },
           "response": []
         },
         {
           "name": "UpdateVendas",
           "request": {
-            "method": "GET",
-            "header": [],
-            "description": "[https://localhost:44302/api/vendas/{idVenda}](https://localhost:44302/api/vendas/{idVenda}EndFragment)"
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"itens\": [\n    {\n      \"idProduto\": \"\",\n      \"quantidade\": 1\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://localhost:44302/api/vendas/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "vendas", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         },
         {
           "name": "DeleteVendas",
           "request": {
-            "method": "GET",
+            "method": "DELETE",
             "header": [],
-            "description": "[https://localhost:44302/api/vendas/{idVenda}](https://localhost:44302/api/vendas/{idVenda}EndFragment)"
+            "url": {
+              "raw": "https://localhost:44302/api/vendas/:id",
+              "protocol": "https",
+              "host": ["localhost"],
+              "port": "44302",
+              "path": ["api", "vendas", ":id"],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
           },
           "response": []
         }
