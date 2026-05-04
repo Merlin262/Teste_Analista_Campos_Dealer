@@ -82,3 +82,4 @@ _ReSharper*/
 
 # Mac Mac OS X 
 .DS_Store
+.claude/settings.local.json

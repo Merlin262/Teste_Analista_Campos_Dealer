@@ -35,12 +35,13 @@ namespace TesteCamposDealer.Tests.Handlers.Vendas
                 new Venda { vlrTotal = 300m },
                 new Venda { vlrTotal = 100m }
             };
-            _repo.Setup(r => r.GetRankingAsync()).ReturnsAsync(ranking);
+            _repo.Setup(r => r.CountAsync()).ReturnsAsync(3);
+            _repo.Setup(r => r.GetRankingPagedAsync(1, It.IsAny<int>())).ReturnsAsync(ranking);
 
             var result = await _handler.Handle(new GetRankingQuery(), CancellationToken.None);
 
-            Assert.Equal(3, result.Count);
-            Assert.Equal(500m, result[0].vlrTotal);
+            Assert.Equal(3, result.Data.Count);
+            Assert.Equal(500m, result.Data[0].vlrTotal);
         }
     }
 }

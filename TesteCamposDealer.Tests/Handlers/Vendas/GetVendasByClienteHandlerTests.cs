@@ -36,12 +36,13 @@ namespace TesteCamposDealer.Tests.Handlers.Vendas
             var vendas = new List<Venda> { new Venda(), new Venda() };
             _clienteRepo.Setup(r => r.GetByIdAsync(idCliente))
                         .ReturnsAsync(new Cliente { idCliente = idCliente });
-            _vendaRepo.Setup(r => r.GetByClienteAsync(idCliente)).ReturnsAsync(vendas);
+            _vendaRepo.Setup(r => r.CountByClienteAsync(idCliente)).ReturnsAsync(2);
+            _vendaRepo.Setup(r => r.GetByClientePagedAsync(idCliente, 1, It.IsAny<int>())).ReturnsAsync(vendas);
 
             var result = await _handler.Handle(
                 new GetVendasByClienteQuery(idCliente), CancellationToken.None);
 
-            Assert.Equal(2, result.Count);
+            Assert.Equal(2, result.Data.Count);
         }
 
     }
