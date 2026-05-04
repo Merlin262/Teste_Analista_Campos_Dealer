@@ -11,7 +11,7 @@ Solução web desenvolvida como resposta ao desafio técnico da Campos Dealer. E
 | `TesteCamposDealer.Domain` | Class Library (.NET 4.8) | Entidades de domínio e interfaces dos repositórios |
 | `TesteCamposDealer.Application` | Class Library (.NET 4.8) | Handlers CQRS, validators, behaviors e DTOs |
 | `TesteCamposDealer.Infrastructure` | Class Library (.NET 4.8) | DbContext, migrations e implementação dos repositórios |
-| `TesteCamposDealer.API` | ASP.NET MVC 5 (.NET 4.8) | Controllers, ViewModels, Mappers e configuração de DI |
+| `TesteCamposDealer.API` | ASP.NET Web API 2  (.NET 4.8) | Controllers, Mappers e configuração de DI |
 | `TesteCamposDealer.Web` | ASP.NET MVC 5 (.NET 4.8) | Interface web — CRUD de vendas |
 | `TesteCamposDealer.Tests` | xUnit (.NET 4.8) | Testes unitários dos handlers e repositórios |
 
@@ -100,7 +100,7 @@ Defina `TesteCamposDealer.API` e `TesteCamposDealer.Web` como projeto de inicial
 
 Para executar: abra o **Test Explorer** (Test → Test Explorer) e clique em **Run All**.
 
-São **69 testes** cobrindo todos os handlers e repositórios.
+São **61 testes** cobrindo todos os handlers e repositórios.
 
 ---
 
@@ -178,7 +178,7 @@ TesteAnalistaCamposDealer/
 │   └── Repositories/           ← ClienteRepository, ProdutoRepository, VendaRepository, UnitOfWork
 │
 ├── API/                        ← TesteCamposDealer.API (ASP.NET Web API 2)
-│   ├── App_Start/              ← BundleConfig, FilterConfig, RouteConfig, WebApiConfig
+│   ├── App_Start/              ← BundleConfig, FilterConfig, WebApiConfig
 │   ├── Controllers/            ← ClienteController, ProdutoController, VendaController
 │   ├── Filters/                ← GlobalExceptionFilter
 │   └── Mappers/                ← ViewModelMappers (usa ViewModels definidos em Web)

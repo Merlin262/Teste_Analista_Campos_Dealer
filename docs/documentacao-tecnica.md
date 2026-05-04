@@ -4,7 +4,8 @@
 
 | Camada | Tecnologia |
 |---|---|
-| Web | ASP.NET MVC 5.2 (.NET Framework 4.8) |
+| Frontend | ASP.NET MVC 5.2.9 (.NET Framework 4.8) |
+| Backend | ASP.NET Web API 2 — 5.2.7 (.NET Framework 4.8) |
 | Views | Razor (CSHTML) + Bootstrap 4 + jQuery |
 | ORM | Entity Framework 6.5 (Code First Migrations) |
 | Banco de dados | SQL Server (LocalDB / Express) |
@@ -21,7 +22,7 @@
 | `TesteCamposDealer.Domain` | Class Library (.NET 4.8) | Entidades de domínio e interfaces dos repositórios |
 | `TesteCamposDealer.Application` | Class Library (.NET 4.8) | Handlers CQRS, validators, behaviors, DTOs e exceções |
 | `TesteCamposDealer.Infrastructure` | Class Library (.NET 4.8) | DbContext, migrations e implementação dos repositórios |
-| `TesteCamposDealer.API` | ASP.NET MVC 5.2 (.NET 4.8) | Controllers JSON, ViewModels, mappers e configuração de DI |
+| `TesteCamposDealer.API` | ASP.NET Web API 2  (.NET 4.8) | Controllers JSON, mappers e configuração de DI |
 | `TesteCamposDealer.Web` | ASP.NET MVC 5.2 (.NET 4.8) | Interface web — CRUD de vendas via Razor + chamadas HTTP à API |
 | `TesteCamposDealer.Tests` | xUnit (.NET 4.8) | Testes unitários de handlers e repositórios |
 
@@ -186,17 +187,7 @@ O arquivo `docs/CamposDealer.postman_collection.json` contém todas as requisiç
 
 ---
 
-## 7. Tratamento de Erros
-
-| Situação | Comportamento |
-|---|---|
-| Validação falha (`ValidationException`) | API retorna HTTP 400 com erros em JSON agrupados por campo; Web exibe mensagem via `ModelState` |
-| Recurso não encontrado (`NotFoundException`) | API retorna HTTP 404 com mensagem JSON; Web redireciona para a listagem |
-| Erros não tratados | `HandleErrorAttribute` padrão do MVC exibe a view `Error.cshtml` |
-
----
-
-## 8. Testes Unitários
+## 7. Testes Unitários
 
 O projeto `TesteCamposDealer.Tests` cobre handlers e repositórios com **65 testes**:
 
@@ -213,7 +204,7 @@ Como EF6 não possui provedor in-memory, os repositórios são testados via `Moc
 
 ---
 
-## 9. Decisões Técnicas Relevantes
+## 8. Decisões Técnicas Relevantes
 
 ### .NET Framework 4.6 → 4.8
  O 4.8 é a versão LTS final do .NET Framework, com suporte estendido da Microsoft e sem impacto de compatibilidade sobre os demais pacotes.
@@ -230,7 +221,7 @@ O `AppDbContext` desabilita proxy e lazy loading. Todas as queries que precisam 
 
 ---
 
-## 10. Autoavaliação Técnica
+## 9. Autoavaliação Técnica
 
 ### Testes de Integração
 Possuo boa familiaridade com testes de integração, validando o funcionamento de endpoints e regras de negócio por meio de chamadas estruturadas e documentadas no Postman. Neste projeto, todos os endpoints foram documentados (arquivo *CamposDealer.postman_collection.json*), garantindo rastreabilidade e facilidade de validação. Além disso, a cobertura de testes supera 80% (conforme evidenciado abaixo), reforçando a confiabilidade das implementações.
