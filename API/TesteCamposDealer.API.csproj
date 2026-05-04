@@ -321,6 +321,8 @@
           <CustomServerUrl>
           </CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <StartAction>1</StartAction>
+          <StartPageUrl>help</StartPageUrl>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

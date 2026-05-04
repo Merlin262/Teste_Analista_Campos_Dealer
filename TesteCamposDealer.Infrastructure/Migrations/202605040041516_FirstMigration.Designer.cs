@@ -7,13 +7,13 @@ namespace TesteCamposDealer.Infrastructure.Data.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.5.2")]
-    public sealed partial class FixVlrTotalToDec : IMigrationMetadata
+    public sealed partial class FirstMigration : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(FixVlrTotalToDec));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(FirstMigration));
         
         string IMigrationMetadata.Id
         {
-            get { return "202605030147239_FixVlrTotalToDec"; }
+            get { return "202605040041516_FirstMigration"; }
         }
         
         string IMigrationMetadata.Source

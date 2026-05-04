@@ -2,7 +2,7 @@
 {
     using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class FirstMigration : DbMigration
     {
         public override void Up()
@@ -95,12 +95,12 @@
             //
 
             Sql(@"
-                UPDATE V
-                   SET V.idCliente = C.idCliente
-                  FROM Venda V
-                  INNER JOIN Cliente C
-                     ON V.idClienteLegado = C.idClienteLegado
-            ");
+            UPDATE V
+               SET V.idCliente = C.idCliente
+              FROM Venda V
+              INNER JOIN Cliente C
+                 ON V.idClienteLegado = C.idClienteLegado
+        ");
 
             CreateIndex("dbo.Venda", "idCliente");
 
@@ -138,26 +138,26 @@
             //
 
             Sql(@"
-                INSERT INTO VendaItem
-                (
-                    idVendaItem,
-                    idVenda,
-                    idProduto,
-                    quantidade,
-                    vlrUnitario,
-                    vlrTotal
-                )
-                SELECT
-                    NEWID(),
-                    V.idVenda,
-                    P.idProduto,
-                    1,
-                    V.vlrTotal,
-                    V.vlrTotal
-                FROM Venda V
-                INNER JOIN Produto P
-                    ON V.idProdutoLegado = P.idProdutoLegado
-            ");
+            INSERT INTO VendaItem
+            (
+                idVendaItem,
+                idVenda,
+                idProduto,
+                quantidade,
+                vlrUnitario,
+                vlrTotal
+            )
+            SELECT
+                NEWID(),
+                V.idVenda,
+                P.idProduto,
+                1,
+                V.vlrTotal,
+                V.vlrTotal
+            FROM Venda V
+            INNER JOIN Produto P
+                ON V.idProdutoLegado = P.idProdutoLegado
+        ");
 
             //
             // =====================================================
