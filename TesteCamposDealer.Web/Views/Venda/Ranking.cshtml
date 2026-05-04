@@ -1,4 +1,4 @@
-@model IEnumerable<TesteCamposDealer.Web.ViewModels.VendaViewModel>
+@model TesteCamposDealer.Web.ViewModels.PagedResultViewModel<TesteCamposDealer.Web.ViewModels.VendaViewModel>
 @{
     ViewBag.Title = "Ranking de Vendas";
 }
@@ -16,8 +16,8 @@
         </tr>
     </thead>
     <tbody>
-        @{ int pos = 1; }
-        @foreach (var v in Model)
+        @{ int pos = ((Model.Page - 1) * Model.PageSize) + 1; }
+        @foreach (var v in Model.Data)
         {
             <tr>
                 <td><strong>@pos</strong></td>
@@ -32,5 +32,19 @@
         }
     </tbody>
 </table>
+
+@if (Model.TotalPages > 1)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.Page ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Ranking", new { page = i })">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}
 
 <a href="@Url.Action("Index")" class="btn btn-outline-secondary">Voltar</a>

@@ -63,11 +63,11 @@ namespace TesteCamposDealer.Web.Services
         public Task<VendaViewModel> GetVendaByIdAsync(Guid id)
             => GetAsync<VendaViewModel>($"api/vendas/{id}");
 
-        public Task<List<VendaViewModel>> GetVendasByClienteAsync(Guid idCliente)
-            => GetAsync<List<VendaViewModel>>($"api/vendas/cliente/{idCliente}");
+        public Task<PagedResultViewModel<VendaViewModel>> GetVendasByClienteAsync(Guid idCliente, int page = 1)
+            => GetAsync<PagedResultViewModel<VendaViewModel>>($"api/vendas/cliente/{idCliente}?page={page}");
 
-        public Task<List<VendaViewModel>> GetRankingAsync()
-            => GetAsync<List<VendaViewModel>>("api/vendas/ranking");
+        public Task<PagedResultViewModel<VendaViewModel>> GetRankingAsync(int page = 1)
+            => GetAsync<PagedResultViewModel<VendaViewModel>>($"api/vendas/ranking?page={page}");
 
         public Task<VendaViewModel> CreateVendaAsync(VendaFormViewModel vm)
             => PostAsync<VendaViewModel>("api/vendas", vm);

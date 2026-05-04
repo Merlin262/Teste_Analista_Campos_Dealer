@@ -33,21 +33,23 @@ namespace TesteCamposDealer.Controllers
             return Ok(result.ToPagedViewModel(v => v.ToViewModel()));
         }
 
-        /// <summary>Retorna o ranking das maiores vendas realizadas, ordenado pelo valor total decrescente.</summary>
+        /// <summary>Retorna o ranking paginado das maiores vendas realizadas, ordenado pelo valor total decrescente.</summary>
+        /// <param name="page">Número da página (padrão: 1).</param>
         [HttpGet, Route("ranking")]
-        public async Task<IHttpActionResult> GetRanking()
+        public async Task<IHttpActionResult> GetRanking(int page = 1)
         {
-            var result = await _mediator.Send(new GetRankingQuery());
-            return Ok(result.Select(v => v.ToViewModel()).ToList());
+            var result = await _mediator.Send(new GetRankingQuery(page));
+            return Ok(result.ToPagedViewModel(v => v.ToViewModel()));
         }
 
-        /// <summary>Retorna todas as vendas vinculadas a um cliente específico, incluindo itens e valor total de cada venda.</summary>
+        /// <summary>Retorna as vendas paginadas vinculadas a um cliente específico, incluindo itens e valor total de cada venda.</summary>
         /// <param name="idCliente">Identificador único do cliente (GUID).</param>
+        /// <param name="page">Número da página (padrão: 1).</param>
         [HttpGet, Route("cliente/{idCliente}")]
-        public async Task<IHttpActionResult> GetByCliente(Guid idCliente)
+        public async Task<IHttpActionResult> GetByCliente(Guid idCliente, int page = 1)
         {
-            var result = await _mediator.Send(new GetVendasByClienteQuery(idCliente));
-            return Ok(result.Select(v => v.ToViewModel()).ToList());
+            var result = await _mediator.Send(new GetVendasByClienteQuery(idCliente, page));
+            return Ok(result.ToPagedViewModel(v => v.ToViewModel()));
         }
 
         /// <summary>Retorna os dados de uma venda pelo seu identificador único, incluindo todos os itens e o valor total.</summary>

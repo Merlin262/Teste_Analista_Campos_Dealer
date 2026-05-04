@@ -1,4 +1,4 @@
-@model IEnumerable<TesteCamposDealer.Web.ViewModels.VendaViewModel>
+@model TesteCamposDealer.Web.ViewModels.PagedResultViewModel<TesteCamposDealer.Web.ViewModels.VendaViewModel>
 @{
     var cliente = ViewBag.Cliente as TesteCamposDealer.Web.ViewModels.ClienteViewModel;
     ViewBag.Title = "Vendas de " + (cliente?.nomeCliente ?? "Cliente");
@@ -7,7 +7,7 @@
 <h2>Vendas de <strong>@(cliente?.nomeCliente)</strong></h2>
 <p class="text-muted">@(cliente?.endereco)</p>
 
-@if (!Model.Any())
+@if (!Model.Data.Any())
 {
     <div class="alert alert-info">Nenhuma venda encontrada para este cliente.</div>
 }
@@ -23,7 +23,7 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var v in Model)
+            @foreach (var v in Model.Data)
             {
                 <tr>
                     <td>@v.dthRegistro.ToString("dd/MM/yyyy HH:mm")</td>
@@ -38,11 +38,25 @@ else
         <tfoot>
             <tr class="table-dark">
                 <td><strong>Total</strong></td>
-                <td><strong>@Model.Sum(v => v.vlrTotal).ToString("C")</strong></td>
+                <td><strong>@Model.Data.Sum(v => v.vlrTotal).ToString("C")</strong></td>
                 <td colspan="2"></td>
             </tr>
         </tfoot>
     </table>
+
+    if (Model.TotalPages > 1)
+    {
+        <nav>
+            <ul class="pagination">
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.Page ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("PorCliente", new { idCliente = cliente.idCliente, page = i })">@i</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 }
 
 <a href="@Url.Action("Index", "Cliente")" class="btn btn-outline-secondary">Voltar</a>

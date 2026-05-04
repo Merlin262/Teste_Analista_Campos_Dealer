@@ -81,7 +81,7 @@ Para usar SQL Server Express ou remoto, altere a connection string em `API/Web.c
 
 ### 4. Executar
 
-Defina `TesteCamposDealer.API` como projeto de inicialização e pressione **F5**.
+Defina `TesteCamposDealer.API` e `TesteCamposDealer.Web` como projeto de inicialização e pressione **F5**.
 
 ---
 
@@ -109,40 +109,50 @@ São **69 testes** cobrindo todos os handlers e repositórios.
 ![Diagrama de Entidades](docs/CamposDealerDiagram.png)
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                    TesteCamposDealer.API                     │
-│          Controllers / ViewModels / Mappers / DI             │
-└───────┬──────────────────────┬───────────────────────────────┘
-        │                      │
-        ▼                      ▼
-┌───────────────┐   ┌──────────────────────────────────────────┐
-│  Application  │   │             Infrastructure               │
-│               │   │                                          │
-│  Handlers     │   │  AppDbContext / Migrations               │
-│  Validators   │   │  ClienteRepository                       │
-│  Behaviors    │   │  ProdutoRepository                       │
-│  Models (DTO) │   │  VendaRepository / UnitOfWork            │
-└───────┬───────┘   └───────────────┬──────────────────────────┘
-        │                           │
-        └──────────┬────────────────┘
-                   ▼
-        ┌──────────────────────┐
-        │        Domain        │
-        │                      │
-        │  Entities            │
-        │  (Cliente, Produto,  │
-        │   Venda, VendaItem,  │
-        │   ProdutoPrecoHist.) │
-        │                      │
-        │  Interfaces          │
-        │  (IUnitOfWork,       │
-        │   IClienteRepo, ...) │
-        └──────────┬───────────┘
-                   │
-           ┌───────▼───────┐
-           │  SQL Server   │
-           │  (LocalDB)    │
-           └───────────────┘
+┌──────────────────────────────────┐
+│      TesteCamposDealer.Web       │
+│                                  │
+│  Controllers / ViewModels        │
+│  Views / Services (ApiClient)    │
+└────────────────┬─────────────────┘
+                 │ HTTP
+                 ▼
+┌──────────────────────────────────┐
+│      TesteCamposDealer.API       │
+│                                  │
+│  Controllers / Mappers           │
+│  Filters / DI                    │
+└──────────┬──────────┬────────────┘
+           │          │
+           ▼          ▼
+┌──────────────┐  ┌───────────────────────────────────┐
+│ Application  │  │          Infrastructure           │
+│              │  │                                   │
+│ Handlers     │  │  AppDbContext / Migrations        │
+│ Validators   │  │  ClienteRepository                │
+│ Behaviors    │  │  ProdutoRepository                │
+│ DTOs         │  │  VendaRepository / UnitOfWork     │
+└──────┬───────┘  └─────────────────┬─────────────────┘
+       │                            │
+       └────────────┬───────────────┘
+                    ▼
+       ┌────────────────────────┐
+       │         Domain         │
+       │                        │
+       │  Entities              │
+       │  (Cliente, Produto,    │
+       │   Venda, VendaItem,    │
+       │   ProdutoPrecoHist.)   │
+       │                        │
+       │  Interfaces            │
+       │  (IUnitOfWork,         │
+       │   IClienteRepo, ...)   │
+       └────────────┬───────────┘
+                    │
+            ┌───────▼───────┐
+            │  SQL Server   │
+            │  (LocalDB)    │
+            └───────────────┘
 ```
 
 ---
@@ -164,15 +174,14 @@ TesteAnalistaCamposDealer/
 │   └── Validators/             ← CreateCliente, UpdateCliente, ...
 │
 ├── Infrastructure/             ← TesteCamposDealer.Infrastructure (Class Library)
-│   ├── Data/                   ← AppDbContext
-│   │   └── Migrations/         ← EF6 Code First migrations (FirstMigration, RemoveLegacyId, FixVlrTotalToDec)
+│   └── Migrations/         ← EF6 Code First migrations (FirstMigration, RemoveLegacyId, FixVlrTotalToDec)
 │   └── Repositories/           ← ClienteRepository, ProdutoRepository, VendaRepository, UnitOfWork
 │
-├── API/                        ← TesteCamposDealer.API (ASP.NET MVC 5)
+├── API/                        ← TesteCamposDealer.API (ASP.NET Web API 2)
 │   ├── App_Start/              ← BundleConfig, FilterConfig, RouteConfig, WebApiConfig
 │   ├── Controllers/            ← ClienteController, ProdutoController, VendaController
-│   ├── Mappers/                ← ViewModelMappers
-│   └── ViewModels/             ← ClienteViewModel, ProdutoViewModel, VendaViewModel, ...
+│   ├── Filters/                ← GlobalExceptionFilter
+│   └── Mappers/                ← ViewModelMappers (usa ViewModels definidos em Web)
 │
 ├── TesteCamposDealer.Web/      ← Interface web (ASP.NET MVC 5)
 │   ├── Controllers/

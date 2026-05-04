@@ -47,11 +47,33 @@ namespace TesteCamposDealer.Infrastructure.Repositories
                 .Where(v => v.idCliente == idCliente)
                 .ToListAsync();
 
+        public Task<List<Venda>> GetByClientePagedAsync(Guid idCliente, int page, int pageSize) =>
+            _ctx.Venda
+                .Include(v => v.Cliente)
+                .Include(v => v.Itens.Select(i => i.Produto))
+                .Where(v => v.idCliente == idCliente)
+                .OrderBy(v => v.dthRegistro)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+        public Task<int> CountByClienteAsync(Guid idCliente) =>
+            _ctx.Venda.CountAsync(v => v.idCliente == idCliente);
+
         public Task<List<Venda>> GetRankingAsync() =>
             _ctx.Venda
                 .Include(v => v.Cliente)
                 .Include(v => v.Itens.Select(i => i.Produto))
                 .OrderByDescending(v => v.vlrTotal)
+                .ToListAsync();
+
+        public Task<List<Venda>> GetRankingPagedAsync(int page, int pageSize) =>
+            _ctx.Venda
+                .Include(v => v.Cliente)
+                .Include(v => v.Itens.Select(i => i.Produto))
+                .OrderByDescending(v => v.vlrTotal)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
         public Task<bool> HasItensByProdutoAsync(Guid idProduto) =>

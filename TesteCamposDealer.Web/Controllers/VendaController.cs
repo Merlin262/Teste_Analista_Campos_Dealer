@@ -19,22 +19,22 @@ namespace TesteCamposDealer.Web.Controllers
             var vendasTask = _api.GetAllVendasAsync(page);
             var rankingTask = _api.GetRankingAsync();
             await Task.WhenAll(vendasTask, rankingTask);
-            ViewBag.Ranking = rankingTask.Result;
+            ViewBag.Ranking = rankingTask.Result.Data;
             return View(vendasTask.Result);
         }
 
-        public async Task<ActionResult> PorCliente(Guid idCliente)
+        public async Task<ActionResult> PorCliente(Guid idCliente, int page = 1)
         {
             var clienteTask = _api.GetClienteByIdAsync(idCliente);
-            var vendasTask = _api.GetVendasByClienteAsync(idCliente);
+            var vendasTask = _api.GetVendasByClienteAsync(idCliente, page);
             await Task.WhenAll(clienteTask, vendasTask);
             ViewBag.Cliente = clienteTask.Result;
             return View(vendasTask.Result);
         }
 
-        public async Task<ActionResult> Ranking()
+        public async Task<ActionResult> Ranking(int page = 1)
         {
-            var result = await _api.GetRankingAsync();
+            var result = await _api.GetRankingAsync(page);
             return View(result);
         }
 
